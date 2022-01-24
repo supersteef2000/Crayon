@@ -3,4 +3,4 @@
 /target
 *.xml
 /src/main/resources
-/src/main/java/frl/suk/crayon/HelloController.java
+/src/main/test

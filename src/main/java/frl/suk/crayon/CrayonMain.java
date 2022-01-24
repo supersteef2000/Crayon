@@ -1,62 +1,58 @@
 package frl.suk.crayon;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CrayonMain extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         // Initialising variables
-        int width = 100;
-        int height = 100;
-        // TODO: Allow zooming with scroll wheel/buttons
-        int zoom = 5;
-        Group group = new Group();
+        int x = 0;
+        int y = 0;
+        int width = 500;
+        int height = 500;
+        final double scaleDelta = 1.1;
+        FlowPane flowPane = new FlowPane();
+        Canvas canvas = new Canvas(width, height);
+        Scene scene = new Scene(flowPane);
+        Color color = Color.BLACK;
+        Constants constants = new Constants();
+
+        // Set variables for use in other classes
+        constants.setScaleDelta(scaleDelta);
+        constants.setFlowPane(flowPane);
+        constants.setCanvas(canvas);
+        constants.setScene(scene);
+        constants.setColor(color);
+
+        // Drawing the border
+        canvas.getGraphicsContext2D().setStroke(Color.GREY);
+        canvas.getGraphicsContext2D().setLineWidth(5);
+        canvas.getGraphicsContext2D().strokeRect(x, y, width, height);
+        canvas.getGraphicsContext2D().setStroke(Color.BLACK);
+        canvas.getGraphicsContext2D().setLineWidth(1);
+
+        // Adding event handlers
+        EventHandlers eventHandlers = new EventHandlers();
+        constants.setEventHandlers(eventHandlers);
 
         // Creating the scene and stage
-        // TODO: Add menu bar with save, save as, open, number of different tools
-        Scene scene = new Scene(group, width * zoom, height * zoom);
         stage.setTitle("Crayon");
-        CreateNewImage rects = new CreateNewImage();
-        Rectangle[][] image = rects.image(width, height, zoom, group);
+        flowPane.getChildren().add(canvas);
         stage.setScene(scene);
         stage.show();
 
-        // Colour picker
-        // TODO: Make proper colour picker
-        AtomicReference<Color> color = new AtomicReference<>(Color.BLACK);
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()) {
-                case DIGIT1 -> color.set(Color.RED);
-                case DIGIT2 -> color.set(Color.GREEN);
-                case DIGIT3 -> color.set(Color.BLUE);
-                case DIGIT4 -> color.set(Color.YELLOW);
-                case DIGIT5 -> color.set(Color.BLACK);
-                case DIGIT6 -> color.set(Color.WHITE);
-                case DIGIT7 -> color.set(Color.TRANSPARENT);
-            }
-        });
-
-        // Change colour of the clicked square to the colour selected above
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                int finalI = i;
-                int finalJ = j;
-                // TODO: Figure out a way to allow dragging
-                image[i][j].setOnMousePressed(mouseEvent -> image[finalI][finalJ].setFill(color.get()));
-                //image[i][j].setOnMouseEntered(mouseEvent -> image[finalI][finalJ].setFill(color.get()));
-            }
-        }
+        // Check for events
+        Events events = new Events();
+        events.events();
     }
 
     public static void main(String[] args) {
         launch();
     }
 }
+
