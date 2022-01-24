@@ -19,3 +19,9 @@ Due to limitations in JavaFX I can't figure out a way to solve some problems I a
 This is the third GUI library I have tried out, and I have yet to find one that does everything I need it to do.
 
 Don't do frontend, kids.
+
+<br>
+
+<br>
+
+Have fun creating Jackson Pollock paintings.
